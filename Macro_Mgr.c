@@ -51,6 +51,9 @@ bool setMacroCallback(PFI _callBack, int _parm, unsigned int _macroID) {
             callBackSet = true;
             /* jump out of the for loop */
             i = MaxNumMacros;
+        }else if(macroCallBacks[i].ID == _macroID){
+            //We don't want to add duplicate macros that will conflict
+            break;
         }
     }
     return callBackSet;
@@ -69,8 +72,8 @@ bool runMacros() {
          * it will or it with the macroFinished state */
         if (macroCallBacks[i].callBack != NULL) {
             /* When a Macro returns true remove it from the macro list */
-            if ((*(macroCallBacks[i].callBack))(macroCallBacks[i].parameter)) {
-                macroFinished |= 1;
+            if ((*(macroCallBacks[i].callBack))(macroCallBacks[i].parameter) == true) {
+                macroFinished = true;
                 macroCallBacks[i].callBack = NULL;
                 macroCallBacks[i].ID = NULL;
                 macroCallBacks[i].parameter = NULL;
